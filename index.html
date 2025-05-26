@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Image Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1><i class="fas fa-images"></i> iOS Image Converter</h1>
+        </div>
+        
+        <div class="card upload-area" id="dropZone">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p>Drag & drop images here or</p>
+            <label for="fileInput" class="button primary-button">Choose Files</label>
+            <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        </div>
+        
+        <div class="preview-container" id="previewContainer">
+            <!-- Preview images will be added here -->
+        </div>
+        
+        <div class="card settings-panel">
+            <div class="panel-header">
+                <h2>Conversion Settings</h2>
+                <button id="toggleAdvanced" class="toggle-button">
+                    <span>Advanced</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            
+            <div class="settings-group">
+                <label for="formatSelect">Output Format</label>
+                <div class="select-wrapper">
+                    <select id="formatSelect" class="form-control">
+                        <option value="jpeg">JPEG</option>
+                        <option value="png">PNG</option>
+                        <option value="webp">WebP</option>
+                        <option value="gif">GIF</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="settings-group">
+                <label for="qualitySlider">Quality: <span id="qualityValue">80%</span></label>
+                <input type="range" id="qualitySlider" class="form-control" min="1" max="100" value="80">
+            </div>
+            
+            <div class="advanced-settings" id="advancedSettings">
+                <div class="settings-group">
+                    <label>Resize</label>
+                    <div class="resize-controls">
+                        <div class="input-group">
+                            <input type="number" id="widthInput" class="form-control" placeholder="Width">
+                            <span class="unit">px</span>
+                        </div>
+                        <span class="separator">×</span>
+                        <div class="input-group">
+                            <input type="number" id="heightInput" class="form-control" placeholder="Height">
+                            <span class="unit">px</span>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="maintainAspectRatio" checked>
+                            <label for="maintainAspectRatio">Keep aspect ratio</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label for="filterSelect">Filter Effect</label>
+                    <div class="select-wrapper">
+                        <select id="filterSelect" class="form-control">
+                            <option value="none">None</option>
+                            <option value="grayscale">Grayscale</option>
+                            <option value="sepia">Sepia</option>
+                            <option value="blur">Blur</option>
+                            <option value="brightness">Brightness</option>
+                            <option value="contrast">Contrast</option>
+                            <option value="invert">Invert</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label for="filterIntensity">Effect Intensity: <span id="filterValue">0%</span></label>
+                    <input type="range" id="filterIntensity" class="form-control" min="0" max="100" value="0" disabled>
+                </div>
+                
+                <div class="settings-group">
+                    <label>Rotation</label>
+                    <div class="rotation-buttons">
+                        <button id="rotateLeft" class="icon-button"><i class="fas fa-undo"></i></button>
+                        <button id="rotateRight" class="icon-button"><i class="fas fa-redo"></i></button>
+                        <button id="flipHorizontal" class="icon-button"><i class="fas fa-arrows-alt-h"></i></button>
+                        <button id="flipVertical" class="icon-button"><i class="fas fa-arrows-alt-v"></i></button>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <label for="filenamePattern">Filename Pattern</label>
+                    <input type="text" id="filenamePattern" class="form-control" value="{name}_{date}">
+                    <small>Use {name}, {date}, {index} as placeholders</small>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="resetButton" class="button secondary-button">Reset</button>
+                <button id="convertButton" class="button primary-button">Convert Images</button>
+            </div>
+        </div>
+        
+        <div class="card batch-panel" id="batchPanel">
+            <div class="panel-header">
+                <h2>Batch Processing</h2>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="batch-status" id="batchStatus">Ready to convert</div>
+            <div class="action-buttons">
+                <button id="downloadAllButton" class="button primary-button" disabled>
+                    <i class="fas fa-download"></i> Download All
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>iOS Image Converter &copy; 2023 | <a href="#" id="aboutLink">About</a></p>
+    </footer>
+    
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>About iOS Image Converter</h2>
+                <button class="close-button" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This is a browser-based image converter with an iOS 18-inspired design. It allows you to:</p>
+                <ul>
+                    <li>Convert images between different formats (JPEG, PNG, WebP, GIF)</li>
+                    <li>Adjust quality and resize images</li>
+                    <li>Apply filters and effects</li>
+                    <li>Rotate and flip images</li>
+                    <li>Batch process multiple images</li>
+                </ul>
+                <p>All processing happens locally in your browser - no images are uploaded to any server.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
